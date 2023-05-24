@@ -1,0 +1,71 @@
+Use-Case Model: TripBooking
+
+Use-Case: Book_Trip
+
+Preconditions:
+- "Actor is logged in the system"
+- "Actor e-mail is set and is correct"
+
+Postcondition (success):
+- "Actor booked a trip, and payed for it"
+- "Actor obtained booking confirmation from the system via e-mail"
+
+Postcondition (partial_success):
+- "Actor booked a trip, and doesn't payed for it"
+- "Actor obtained booking confirmation from the system via e-mail"
+
+Any flow can be interrupted by cancel event
+
+Trigger: Actor wants "the system to book a trip"
+Main flow:
+    1. "The system offers an actor an option to choose the way of creating the new trip (from scratch or based on old trips)"
+    2. "An actor chooses the way to create a new trip"
+    3. System verifies "the way is a creation the new trip from scratch"
+    4. "The system asks an actor for the searching criteria"
+    5. "An actor specifies the searching criteria"
+    6. System verifies that "there exist some offers matching the criteria"
+    7. "The system offers an actor the trips found"
+    8. "An actor selects the trip to buy"
+    9. Actor wants "to pay"
+    10. "The system stores information about the trip and marks it as a one to be payed"
+    11. System includes Pay use-case
+    12. System verifies that "the payment ended with success"
+    13. "The system creates and stores an invoice for the trip"
+    14. "The system sends to the e-mail of the actor the confirmation of his booked trip with the payment status and the invoice"
+    15. The use-case ends with success
+Steps 4.-7. can be repeated until "an actor is satisfied with the trip offer"
+
+Trigger: Actor sends cancel event
+Flow Z : cancel_event_handler
+Z1. The use-case ends with failure
+
+Flow A : No_matching_offers
+	A1.6. System verifies that "there is no an offer matching the criteria at least partially"
+	A2. "System informs an actor about the lack of an offer to book"
+	A3. Goto 4.
+
+Flow B : Unsuccessfull_payment
+	B1.12. System verifies that "the Payment ended with failure"
+	B2. "The system informs about the problem and aks if to repeat the payment"
+	B3. Actor wants "to repeat the payment"
+	B4. Goto 11.
+Steps B1.-B4. can be repeated max 3 times  
+
+Flow C : Payment_postponed
+	C1.9. Actor wants "to postpone the payment"
+	C2.13.-14.
+	C3. The use-case ends with partial_success
+
+Flow X : Unsuccessfull_payment_and_actor_does't_want_to_repeat_the_payment
+	X1.B3. Actor wants "to skip the payment"
+	X2.C2.-C3.
+
+Flow D : An_actor_wants_to_compose_a_new_trip_from_his/her_past_trips
+	D1.3. System verifies "the way was to create the new trip from the past trips"
+	D2. System verifies that "the list of past trips is not empty"
+	D3. "The system offers an actor information about all trips (and their components) already booked by the actor"
+	D4. "An actor composes his/her new trip from the proposed elements"
+	D5. Goto 10.
+
+Steps D3.-D4. can be repeated until "an actor is satisfied"
+

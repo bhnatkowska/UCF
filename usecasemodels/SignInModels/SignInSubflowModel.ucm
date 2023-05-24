@@ -1,0 +1,30 @@
+Use-Case Model: Signing
+Subflow A: Authentication_failure 
+A1. "System informs actor about wrong autentication data"
+A2. The use-case ends with failure
+
+Use-Case: SignIn
+Documentation: "An abstract use-case. Parent of different signin methods"
+
+Postcondition (success):
+- "User authenticated successfully"
+
+Use-Case: SignIn_with_symbol --> SignIn
+Trigger: Actor wants "to login drawing a symbol on the screen"  
+Main flow: 
+1. System verifies that "the symbol matches the pattern"
+2. The use-case ends with success
+
+Flow B: wrong_symbol
+B1. 1. System verifies that "the symbol does not match the pattern"
+B2. subflow Autentication_failure
+
+Use-Case: SignIn_with_fingerprint --> SignIn
+Trigger: Actor wants "to login based on his/her fingerprint"
+Main flow:
+1. System verifies that "the fingerprint matches the pattern"
+2. The use-case ends with success
+
+Flow B: wrong_symbol
+B1. 1. System verifies that "the symbol does not match the pattern"
+B2. subflow Autentication_failure

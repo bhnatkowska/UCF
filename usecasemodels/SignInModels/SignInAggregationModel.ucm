@@ -1,0 +1,25 @@
+Use-Case Model: Signing
+Use-Case: SignIn
+Documentation: "A root for inheritance hierarchy"
+Postcondition (success):
+- "User authenticated successfully"
+
+Use-Case: SignIn_with_symbol --> SignIn
+Trigger: Actor wants "to login drawing a symbol on the screen"
+Main flow:
+1. System verifies that "the symbol matches the pattern"
+2. The use-case ends with success
+
+Flow A: No_matching_pattern
+A1.1. System verifies that "the symbol doesn’t match the pattern"
+A2. The use-case ends with failure
+
+Use-Case: SignIn_with_fingerprint --> SignIn
+Trigger: Actor wants "to login based on his/her fingerprint"
+Main flow:
+1. System verifies that "the fingerprint matches the pattern"
+2. The use-case ends with success
+
+Flow A: No_matching_pattern
+A1.1. System verifies that "the symbol doesn’t match the pattern"
+A2. The use-case ends with failure

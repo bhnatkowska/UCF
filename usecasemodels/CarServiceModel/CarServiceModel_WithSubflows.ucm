@@ -1,0 +1,77 @@
+Use-Case Model: Car_service
+
+Trigger: Actor sends cancelling_service event
+Flow A : cancelling_service_event_handler
+A1. "The system asks for cancelling confirmation"
+A2. "An actor informs about his/her decision"
+A3. System verifies that "the actor wants to cancel service booking"
+A4. The use-case ends with failure
+
+Flow C: An_actor_doesn't_confirm_cancellation
+C1.A3. System verifies that "the actor doesn't want to cancel service booking"
+C2. Goto ctx
+
+Use-Case: Book_visit
+Preconditions:
+- "an actor is logged into the software system"
+- "an actor defined his/her car details"
+- "an actor defined the communication channels for obtaining booking confirmations or cancellations"
+Postcondition (success):
+- "visit in the choosen car service is booked"
+- "actor receives booking confirmation"
+Postcondition (failure):
+- "the booking is canceled by an actor"
+
+Trigger: Actor wants "the system to book a service"
+Main flow:
+1. "The system offers the search criterions to be defined by an actor"
+2. "An actor introduces his or her search criterions"
+3. System verifies that "the search criterions are met by some services"
+4. "The system presents the car services found"
+5. "An actor chooses a service until he or she is satisfied"
+6. "An actor books the visit"
+7. "The system confirms successful booking and sends actor a confirmation"
+8. The use-case ends with success
+
+Steps 1.-5. can be interrupted by cancelling_service event with ctx
+
+Flow B: An_actor_search_criteria_not_met
+B1.3. System verifies that "the search criteria are not met"
+B2. "The system informs an actor that there is no service found"
+B3. Goto 1.
+
+
+Use-Case: ReportInspection
+Preconditions:
+- "an actor is logged in the system"
+Postcondition (success):
+- "Information about services (fluids or spare parts exchange) are recorded"
+
+Subflow P : Car_info
+P1. "System informs an actor about all cars booked for the date of inspection"
+P2. "Actor selects an inspected car"
+
+Subflow Q : Reporting_fluids_spare_parts
+Q1. "The system asks an actor to fill information about the inspection scope"
+Q2. "An actor reports the fluid to be exchanged and/or the spare parts required"
+Q3. System verifies that "the necessary parts and fluids are available"
+Q4. "An actor reports in the system a fluid/spare parts exchanged"
+Steps Q2.-Q3. can be repeated until "the necessary parts and fluids are unavailable"
+
+Subflow R : Closing_inspection
+R1. "An actor closes the inspection in the system"
+R2. "The system stores information about fluids or parts being exchanged, and informs an actor about successfull inspection close"
+
+Trigger: Actor wants "the system to register a car inspection"
+Main flow:
+1. System verifies that "there are some bookings for the date of inspection"
+2. subflow Car_info
+3. subflow Reporting_fluids_spare_parts
+4. subflow Closing_inspection
+5. The use-case ends with success
+Steps 2.-4. can be interrupted by cancelling_service event with ctx
+
+Flow C: No_visit_booked
+C1.1. System verifies "that there is no booking for a specific date/time"
+C2. "The system informs about lack of a booked visit"
+C3. The use-case ends with failure

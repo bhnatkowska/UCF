@@ -1,0 +1,64 @@
+Use-Case Model: Document_Editor
+
+Any use-case can be interrupted by close_system event 
+
+Flow P: Confirmation_denied
+P1.C2. Actor wants "to stay"
+P2. Goto ctx
+
+Trigger: Actor sends close_system event with ctx
+Flow C: close_system_event_handler
+C1. "The system asks for closing confirmation"
+C2. Actor wants "to close the system"
+C3. The system ends
+
+Use-Case: Edit_document
+Documentation: "Use case enables to open a document, edit it and save changes. User can save changes on demand with save_document event."
+Postcondition (success):
+- "Changes to the document saved successfully"
+Any flow can be interrupted by save_document event 
+Any flow can be interrupted by cancel event 
+Any flow can be interrupted by close_system_local event
+
+Subflow O: Open_document
+O1. "System asks about the document to open"
+O2. "Actor selects a document"
+O3. "System opens the document for edition"
+
+Subflow E: Document_edition
+E1. "Actor introduces changes to the document"
+E2. "System stores the changes to the document"
+Steps E1.-E2. can be repeated until "actor is satisfied"
+
+Trigger: Actor sends save_document event with ctx
+Flow D: save_document_event_handler
+D1. "System stores the document"
+D2. Goto ctx
+
+Trigger: Actor sends close_system_local event with ctx
+Flow X: close_system_event_handler
+X1. "The system asks for closing confirmation"
+X2. Actor wants "to close the system"
+X3. "System stores the document"
+X4. System verifies "the storage was successful"
+X5. "System informs about the storage success"
+X6. The system ends
+
+Flow B: Continuation
+B1.X2. Actor wants "to continue"
+B2. Goto ctx
+
+Flow A: Storage_failed
+A1.X4. System verifies "the storage was unsuccessful"
+A2. "System informs about the reason"
+A3. The use-case ends with failure
+
+Trigger: Actor sends cancel event with ctx
+Flow C: cancel_event_handler
+C1. The use-case ends with failure  
+
+Trigger: Actor sends open_document event
+Main flow:
+1. subflow Open_document
+2. subflow Document_edition
+3. The use-case ends with success

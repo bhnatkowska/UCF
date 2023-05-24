@@ -1,0 +1,58 @@
+Use-Case Model: Buying
+
+Trigger: Actor sends cancelling_service event
+Flow A: cancelling_service_event_handler
+A1. "System asks for cancellation confirmation"
+A2. Actor wants "to cancel operation"
+A3. The use-case ends with failure
+
+Flow B: Cancellation_denied
+B1.A2. Actor wants "to deny cancellation"  
+B2. Goto ctx
+    
+Use-Case: Buy
+Postcondition (success): 
+- "An order is stored by the system"
+- "An invoice is generated, assigned to the order and stored by the system"
+
+Trigger: Actor wants "to buy an item"
+Main flow:
+    1. "..."
+    2. "System asks about order data (including payment method)"
+    3. "Actor delivers the order data"
+    4. System verifies that "the order data are valid"
+    5. System includes Pay use-case
+    6. System verifies that "the Pay use-case ended with success"
+    7. "System stores an order, generates an invoice, and sends it by e-mail"
+    8. "System informs about order completion and enables an option to download the invoice"
+    9. Extension point: "Actor requires invoice downloading"
+	The flow is extended with Download_invoice use-case
+    10. The use-case ends with success
+
+Steps 1.-3. can be interrupted by cancelling_service event with ctx
+ 
+Flow B : The_order_data_invalid
+    B1.4. System verifies that "the order data are invalid"
+    B2. "System informs about invalid data"
+    B3. Goto 2.
+
+Flow C : Unsuccessful_payment
+    C1.6. System verifies that "the payment ended with failure"
+    C2. "System informs about the lack of payment"
+    C3. Goto 2.
+
+Use-Case: Downolad_invoice
+Postcondition (success): 
+- "An invoice is downloaded to the Buyer's computer"
+
+Main flow:
+    1. "System presents the invoice details and asks for confirmation of the invoice download"
+    2. Actor wants "to download the invoice"
+    3. "System sends the last buyer invoice to the buyer's computer"
+    4. The use-case ends with success
+
+Steps 1.-3. can be interrupted by cancelling_service event with ctx
+
+Flow B : Downloading_not_confirmed
+B1.2. Actor wants "to skip downloading"
+B2. The use-case ends with partial success

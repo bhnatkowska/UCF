@@ -1,0 +1,50 @@
+Use-Case Model: Payment
+
+Trigger: Actor sends cancelling_service event with ctx
+Flow H: cancelling_service_event_handler
+    H1. "System asks for cancellation confirmation"
+    H2. "Actor informs about his/her decision"
+    H3. System verifies that "actor wants to cancel operation"
+    H4. The use-case ends with failure
+
+Flow SB: Actor_denies_cancelling 
+    SB1.H3. System verifies that "actor denies cancellation"
+    SB2.Goto ctx
+
+Use-Case: Pay 
+Documentation: "Abstract use-case. A root hierarchy for different payement methods"
+
+Postcondition (succes):
+- "Payment succesful"
+Postcondition (failure):
+- "Payment unsuccessful"
+
+Use-Case: CreditCard --> Pay
+Documentation: "Use-case enables payment with a credit card"
+Trigger: Actor wants "to pay with creditcard"  
+Main flow:
+    1. "System asks for credit card details"
+    2. "Actor delivers credit card details"
+    3. "System sends a request to a bank for payment and waits for bank response"
+    4. System verifies that "the payment was successful"
+    5. The use-case ends with success
+Steps 1.-3. can be interrupted by cancelling_service event
+    
+Flow B : Payment_unsuccessful
+   B1.4. System verifies that "the payment was unsuccessful"
+   B2. The use-case ends with failure
+
+Use-Case: PayPal --> Pay
+Documentation: "Use-case enables payment wth PayPal system"
+
+Trigger: Actor wants "to pay with PayPal" 
+Main flow:
+    1. "System redirects to the PayPal system sending to it order details"
+    2. "Actor pays for the order with the PayPal system"
+    3. System verifies that "the payment was successful"
+    4. The use-case ends with success
+Steps 1.-2. can be interrupted by cancelling_service event
+
+Flow C : Payment_unsuccessfull
+   C1.3. System verifies that "the payment was unsuccessful"
+   C2. The use-case ends with failure
