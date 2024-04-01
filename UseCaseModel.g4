@@ -37,22 +37,25 @@ flow_declaration : main_flow_declaration | alternative_flow_declaration;
 main_flow_declaration : 'Main flow' Colon;
 alternative_flow_declaration : 'Flow' flow_id Colon flow_name;
 subflow_definition : flow_definition;
-trigger : 'Trigger' Colon triggering_action;
+
+trigger : 'Trigger' Colon trigger_type;
+trigger_type : event_trigger | actor_trigger;
+
+event_trigger : 'Actor sends' event_name 'event' ('with' ctx_name)?;
+actor_trigger :  'Actor wants' casual;
 
 step : Step_Id action;
-action : casual | triggering_action | final | internal_loop | conditional |
-   goto | reference | gotoCtx | dependency;
+action : casual | final | internal_loop | conditional |
+   goto | actor_choice | reference | gotoCtx | dependency;
 casual : Sentence;
-triggering_action : event_triggering_action | actor_choice;
-event_triggering_action : 'Actor sends' event_name 'event' ('with' ctx_name)?;
-actor_choice :  'Actor wants' casual;
 final :  final_use_case | final_system;
 final_use_case : 'The use-case ends with' state;
 final_system : 'The system ends';
 internal_loop : casual 'until' condition | casual ('max')? Number 'times';
 condition : casual;
 conditional :  ('System verifies' | 'System verifies that') condition;
-overriding : Step_Id triggering_action;
+actor_choice : 'Actor chooses' casual;
+overriding : Step_Id actor_choice;
 goto : 'Goto' reference_to_step;
 gotoCtx : 'Goto ctx' ctx_name?;
 reference : (reference_to_step action? | reference_to_range action? | reference_to_subflow) ;
