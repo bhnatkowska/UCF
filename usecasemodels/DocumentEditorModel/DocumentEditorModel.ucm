@@ -3,13 +3,13 @@ Use-Case Model: Document_Editor
 Any use-case can be interrupted by close_system event 
 
 Flow P: Confirmation_denied
-P1.C2. Actor wants "to stay"
+P1.C2. Actor chooses "to stay"
 P2. Goto ctx
 
 Trigger: Actor sends close_system event with ctx
 Flow C: close_system_event_handler
 C1. "The system asks for closing confirmation"
-C2. Actor wants "to close the system"
+C2. Actor chooses "to close the system"
 C3. The system ends
 
 Use-Case: Edit_document
@@ -38,14 +38,14 @@ D2. Goto ctx
 Trigger: Actor sends close_system_local event with ctx
 Flow X: close_system_event_handler
 X1. "The system asks for closing confirmation"
-X2. Actor wants "to close the system"
+X2. Actor chooses "to close the system"
 X3. "System stores the document"
 X4. System verifies "the storage was successful"
 X5. "System informs about the storage success"
 X6. The system ends
 
 Flow B: Continuation
-B1.X2. Actor wants "to continue"
+B1.X2. Actor chooses "to continue"
 B2. Goto ctx
 
 Flow A: Storage_failed

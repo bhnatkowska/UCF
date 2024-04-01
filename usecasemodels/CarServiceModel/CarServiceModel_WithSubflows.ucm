@@ -4,7 +4,7 @@ Trigger: Actor sends cancelling_service event
 Flow A : cancelling_service_event_handler
 A1. "The system asks for cancelling confirmation"
 A2. "An actor informs about his/her decision"
-A3. System verifies that "the actor wants to cancel service booking"
+A3. System verifies that "the actor requested to cancel service booking"
 A4. The use-case ends with failure
 
 Flow C: An_actor_doesn't_confirm_cancellation

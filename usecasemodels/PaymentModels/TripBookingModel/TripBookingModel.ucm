@@ -26,7 +26,7 @@ Main flow:
     6. System verifies that "there exist some offers matching the criteria"
     7. "The system offers an actor the trips found"
     8. "An actor selects the trip to buy"
-    9. Actor wants "to pay"
+    9. Actor chooses "to pay"
     10. "The system stores information about the trip and marks it as a one to be payed"
     11. System includes Pay use-case
     12. System verifies that "the payment ended with success"
@@ -47,17 +47,17 @@ Flow A : No_matching_offers
 Flow B : Unsuccessfull_payment
 	B1.12. System verifies that "the Payment ended with failure"
 	B2. "The system informs about the problem and aks if to repeat the payment"
-	B3. Actor wants "to repeat the payment"
+	B3. Actor chooses "to repeat the payment"
 	B4. Goto 11.
 Steps B1.-B4. can be repeated max 3 times  
 
 Flow C : Payment_postponed
-	C1.9. Actor wants "to postpone the payment"
+	C1.9. Actor chooses "to postpone the payment"
 	C2.13.-14.
 	C3. The use-case ends with partial_success
 
 Flow X : Unsuccessfull_payment_and_actor_does't_want_to_repeat_the_payment
-	X1.B3. Actor wants "to skip the payment"
+	X1.B3. Actor chooses "to skip the payment"
 	X2.C2.-C3.
 
 Flow D : An_actor_wants_to_compose_a_new_trip_from_his/her_past_trips
